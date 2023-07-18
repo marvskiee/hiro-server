@@ -28,16 +28,17 @@ def response_maker(sub_path):
     for  l in movie_soup:
         image = l.select_one("div.image img")
         if image :
-            final_image = image["src"]
+            final_image = image["src"].replace("/t/p/w220_and_h330_face","")
 
             link = l.select_one("div.content > h2 a")["href"]
             title = l.select_one("div.content > h2 a").text.strip()
-
+            ratings = l.select_one("div.content div.percent span")["class"][1]
             temp_list.append({
                 "type":link.split("/")[1].capitalize() if link.split("/")[1] == "movie" else  "TV Series" ,
                 "id":link.split("/")[2],
-                "image": f"https://www.themoviedb.org/{final_image}",
+                "image": f"https://www.themoviedb.org/t/p/original{final_image}",
                 "title": title,
+                "ratings": 0 if ratings.replace("icon-r","") == "NR" else  ratings.replace("icon-r","")
             })
 
 
